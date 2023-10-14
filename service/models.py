@@ -1,10 +1,14 @@
 """
-Models for YourResourceModel
+Models for Promotion
 
 All of the models are stored in this module
 """
 import logging
+
+# from enum import Enum
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
+
 
 logger = logging.getLogger("flask.app")
 
@@ -14,31 +18,37 @@ db = SQLAlchemy()
 
 # Function to initialize the database
 def init_db(app):
-    """ Initializes the SQLAlchemy app """
-    YourResourceModel.init_db(app)
+    """Initializes the SQLAlchemy app"""
+    Promotion.init_db(app)
 
 
 class DataValidationError(Exception):
-    """ Used for an data validation errors when deserializing """
+    """Used for an data validation errors when deserializing"""
 
 
-class YourResourceModel(db.Model):
+class Promotion(db.Model):
     """
-    Class that represents a YourResourceModel
+    Class that represents a Promotion
     """
 
     app = None
 
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63))
+    name = db.Column(db.String(63), nullable=False)
+    description = db.Column(db.String(63))
+    products_type = db.Column(db.String(63))
+    promotion_code = db.Column(db.String(63))
+    require_code = db.Column(db.Boolean(), nullable=False, default=False)
+    start_date = db.Column(db.Date())
+    end_date = db.Column(db.Date())
 
     def __repr__(self):
-        return f"<YourResourceModel {self.name} id=[{self.id}]>"
+        return f"<Promotion {self.name} id=[{self.id}]>"
 
     def create(self):
         """
-        Creates a YourResourceModel to the database
+        Creates a Promotion to the database
         """
         logger.info("Creating %s", self.name)
         self.id = None  # pylint: disable=invalid-name
@@ -47,44 +57,68 @@ class YourResourceModel(db.Model):
 
     def update(self):
         """
-        Updates a YourResourceModel to the database
+        Updates a Promotion to the database
         """
         logger.info("Saving %s", self.name)
+        if not self.id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
-        """ Removes a YourResourceModel from the data store """
+        """Removes a Promotion from the data store"""
         logger.info("Deleting %s", self.name)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a YourResourceModel into a dictionary """
-        return {"id": self.id, "name": self.name}
+        """Serializes a Promotion into a dictionary"""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "products_type": self.products_type,
+            "promotion_code": self.promotion_code,
+            "require_code": self.require_code,
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat(),
+        }
 
     def deserialize(self, data):
         """
-        Deserializes a YourResourceModel from a dictionary
+        Deserializes a Promotion from a dictionary
 
         Args:
             data (dict): A dictionary containing the resource data
         """
         try:
             self.name = data["name"]
+            self.description = data["description"]
+            self.products_type = data["products_type"]
+            self.promotion_code = data["promotion_code"]
+            if isinstance(data["require_code"], bool):
+                self.require_code = data["require_code"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for boolean [require_code]: "
+                    + str(type(data["require_code"]))
+                )
+            self.start_date = date.fromisoformat(data["start_date"])
+            self.end_date = date.fromisoformat(data["end_date"])
+
         except KeyError as error:
             raise DataValidationError(
-                "Invalid YourResourceModel: missing " + error.args[0]
+                "Invalid Promotion: missing " + error.args[0]
             ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid YourResourceModel: body of request contained bad or no data - "
-                "Error message: " + error
+                "Invalid Promotion: body of request contained bad or no data - "
+                "Error message: " + str(error)
             ) from error
         return self
 
     @classmethod
     def init_db(cls, app):
-        """ Initializes the database session """
+        """Initializes the database session"""
         logger.info("Initializing database")
         cls.app = app
         # This is where we initialize SQLAlchemy from the Flask app
@@ -94,22 +128,22 @@ class YourResourceModel(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the YourResourceModels in the database """
-        logger.info("Processing all YourResourceModels")
+        """Returns all of the Promotion in the database"""
+        logger.info("Processing all Promotion")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a YourResourceModel by it's ID """
+        """Finds a Promotion by it's ID"""
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
     def find_by_name(cls, name):
-        """Returns all YourResourceModels with the given name
+        """Returns all Promotion with the given name
 
-        Args:
-            name (string): the name of the YourResourceModels you want to match
+        Args:DataValidationError
+            name (string): the name of the Promotion you want to match
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
