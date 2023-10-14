@@ -52,7 +52,18 @@ class PromotionFactory(factory.Factory):
     products_type = FuzzyChoice(
         choices=["all_types", "Electronics", "clothing", "Toys", "all_types"]
     )
-    promotion_code = factory.Faker("pystr")
+
     require_code = FuzzyChoice(choices=[True, False])
+
+    @factory.lazy_attribute
+    def promotion_code(self):
+        if self.require_code:
+            temp = factory.Faker("pystr")
+            return "%s" % temp
+
     start_date = FuzzyDate(date(2008, 1, 1))
-    end_date = FuzzyDate(date(2008, 1, 1))
+
+    @factory.lazy_attribute
+    def end_date(self):
+        date_s = self.start_date
+        return FuzzyDate(date_s).fuzz()

@@ -64,8 +64,8 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(
             str(promotion), "<Promotion First time Shopper Discount id=[None]>"
         )
-        self.assertTrue(promotion is not None)
-        self.assertEqual(promotion.id, None)
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
         self.assertEqual(promotion.name, "First time Shopper Discount")
         self.assertEqual(
             promotion.description, "Offer a special discount for first-time customers"
@@ -76,7 +76,26 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.start_date, date(2023, 9, 10))
         self.assertEqual(promotion.end_date, date(2023, 10, 10))
 
-    def test_add_a_promotion(self):
+        promotion = Promotion(
+            name="Buy One, Get One Free",
+            description="Introduce buy-one-get-one promotions",
+            products_type="clothing",
+            require_code=False,
+            start_date=date(2023, 9, 9),
+            end_date=date(2023, 9, 10),
+        )
+
+        self.assertEqual(str(promotion), "<Promotion Buy One, Get One Free id=[None]>")
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        self.assertEqual(promotion.name, "Buy One, Get One Free")
+        self.assertEqual(promotion.description, "Introduce buy-one-get-one promotions")
+        self.assertEqual(promotion.products_type, "clothing")
+        self.assertEqual(promotion.require_code, False)
+        self.assertEqual(promotion.start_date, date(2023, 9, 9))
+        self.assertEqual(promotion.end_date, date(2023, 9, 10))
+
+    def test_create_a_promotion_to_database(self):
         """It should Create a promotion and add it to the database"""
         promotions = Promotion.all()
         self.assertEqual(promotions, [])
@@ -89,19 +108,76 @@ class TestPromotionModel(unittest.TestCase):
             start_date=date(2023, 9, 10),
             end_date=date(2023, 10, 10),
         )
-        self.assertTrue(promotion is not None)
-        self.assertEqual(promotion.id, None)
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
         promotion.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(promotion.id)
+        self.assertEqual(len(Promotion.all()), 1)
+
+        promotion = Promotion(
+            name="Buy One, Get One Free",
+            products_type="clothing",
+            require_code=False,
+            start_date=date(2023, 9, 9),
+            end_date=date(2023, 9, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        promotion.create()
+        self.assertIsNotNone(promotion.id)
+
+        promotion = Promotion(
+            name="Limited Time Offers",
+            products_type="Toys",
+            require_code=False,
+            start_date=date(2023, 9, 9),
+            end_date=date(2023, 9, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        promotion.create()
+        self.assertIsNotNone(promotion.id)
+
         promotions = Promotion.all()
-        self.assertEqual(len(promotions), 1)
+        self.assertEqual(len(promotions), 3)
+
+    def test_create_a_promotion_with_wrong_promotion_code(self):
+        """It should not Create a promotion with promotion_code and require_code=False"""
+        promotion = Promotion(
+            name="First time Shopper Discount",
+            description="Offer a special discount for first-time customers",
+            products_type="all_types",
+            promotion_code="6604876475937",
+            require_code=False,
+            start_date=date(2023, 9, 10),
+            end_date=date(2023, 10, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        self.assertRaises(DataValidationError, promotion.create)
+
+    def test_create_a_promotion_with_wrong_start_and_end_date(self):
+        """It should not Create a promotion with end date before start date"""
+        promotion = Promotion(
+            name="First time Shopper Discount",
+            description="Offer a special discount for first-time customers",
+            products_type="all_types",
+            promotion_code="6604876475937",
+            require_code=True,
+            start_date=date(2023, 10, 10),
+            end_date=date(2023, 9, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        self.assertRaises(DataValidationError, promotion.create)
 
     def test_read_a_promotion(self):
         """It should Read a promotion"""
         promotion = PromotionFactory()
         logging.debug(promotion)
         promotion.id = None
+
         promotion.create()
         logging.debug(promotion)
         self.assertIsNotNone(promotion.id)
@@ -170,7 +246,7 @@ class TestPromotionModel(unittest.TestCase):
 
         promotion = PromotionFactory()
         data = promotion.serialize()
-        self.assertNotEqual(data, None)
+        self.assertIsNotNone(data)
         self.assertIn("id", data)
         self.assertEqual(data["id"], promotion.id)
         self.assertIn("name", data)
@@ -194,8 +270,8 @@ class TestPromotionModel(unittest.TestCase):
         promotion = Promotion()
         promotion.deserialize(data)
 
-        self.assertNotEqual(promotion, None)
-        self.assertEqual(promotion.id, None)
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
         self.assertEqual(promotion.name, data["name"])
         self.assertEqual(promotion.description, data["description"])
         self.assertEqual(promotion.products_type, data["products_type"])
@@ -235,7 +311,7 @@ class TestPromotionModel(unittest.TestCase):
 
         # find the 2nd pet in the list
         promotion = Promotion.find(promotions[1].id)
-        self.assertIsNot(promotion, None)
+        self.assertIsNotNone(promotion)
         self.assertEqual(promotion.id, promotions[1].id)
         self.assertEqual(promotion.name, promotions[1].name)
         self.assertEqual(promotion.description, promotions[1].description)
@@ -244,6 +320,15 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.require_code, promotions[1].require_code)
         self.assertEqual(promotion.start_date, promotions[1].start_date)
         self.assertEqual(promotion.end_date, promotions[1].end_date)
+
+    def test_find_promotion_nonexistent_id(self):
+        """It cannot Find a promotion by nonexistent id"""
+        promotion = PromotionFactory()
+        promotion.create()
+        id = promotion.id
+        self.assertEqual(len(Promotion.all()), 1)
+        promotion = Promotion.find(id + 1)
+        self.assertIsNone(promotion)
 
     def test_find_by_name(self):
         """It should Find a promotion by Name"""
@@ -259,3 +344,46 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for promotion in found:
             self.assertEqual(promotion.name, name)
+
+    def test_find_by_products_type(self):
+        """It should Find a promotion by products_type"""
+        promotions = PromotionFactory.create_batch(5)
+        for promotion in promotions:
+            promotion.create()
+        logging.debug(promotions)
+
+        products_type = promotions[3].products_type
+        count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.products_type == products_type
+            ]
+        )
+
+        found = Promotion.find_by_products_type(products_type)
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertEqual(promotion.products_type, products_type)
+
+    def test_find_by_date(self):
+        """It should Find a promotion by date"""
+        promotions = PromotionFactory.create_batch(5)
+        for promotion in promotions:
+            promotion.create()
+        logging.debug(promotions)
+
+        date_temp = promotions[0].start_date
+        count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.start_date <= date_temp and promotion.end_date >= date_temp
+            ]
+        )
+
+        found = Promotion.find_by_date(date_temp)
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertTrue(promotion.start_date <= date_temp)
+            self.assertTrue(promotion.end_date >= date_temp)
