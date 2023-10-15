@@ -8,11 +8,11 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
+from datetime import date
 from service import app
 from service.models import db, Promotion, init_db
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
-from datetime import date
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -213,3 +213,26 @@ class TestPromotionServer(TestCase):
         self.assertIn(
             "was not found", data["message"]
         )  # message contains a message related to an error or status information from the server.
+
+    ######################################################################
+    # DELETE A PROMOTION
+    ######################################################################
+    def test_delete_promotion_by_id(self):
+        """It should delete a single promotion by its id"""
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_promotion_by_name(self):
+        """It should delete a single promotion by its name"""
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.name}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

@@ -49,7 +49,7 @@ class TestPromotionModel(unittest.TestCase):
     #  T E S T   C A S E S
     ######################################################################
 
-    def test_create_a_Promotion(self):
+    def test_create_a_promotion(self):
         """It should Create a Promotion and assert that it exists"""
         promotion = Promotion(
             name="First time Shopper Discount",
@@ -408,7 +408,7 @@ class TestPromotionModel(unittest.TestCase):
             [
                 promotion
                 for promotion in promotions
-                if promotion.start_date <= date_temp and promotion.end_date >= date_temp
+                if promotion.start_date <= date_temp <= promotion.end_date
             ]
         )
 

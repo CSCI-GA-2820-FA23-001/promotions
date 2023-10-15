@@ -80,6 +80,42 @@ def read_promotions(promotion_id):
     app.logger.info("Returning promotion: %s", promotion.name)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
+######################################################################
+# DELETE A PROMOTION
+######################################################################
+
+
+@app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
+def delete_promotions_by_id(promotion_id):
+    """
+    Delete a Promotion by ID
+
+    This endpoint will delete a Promotion based on the id specified in the path
+    """
+    app.logger.info("Request for delete promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if promotion:
+        promotion.delete()
+
+    app.logger.info("Promotion with ID [%s] delete complete.", promotion_id)
+    return jsonify(msg="delete by id"), status.HTTP_204_NO_CONTENT
+
+
+@app.route("/promotions/<string:promotion_name>", methods=["DELETE"])
+def delete_promotions_by_name(promotion_name):
+    """
+    Delete a Promotion by Name
+
+    This endpoint will delete a Promotion based on the name specified in the path
+    """
+    app.logger.info("Request for delete promotion with name: %s", promotion_name)
+    promotion = Promotion.find_by_name(promotion_name)
+    if promotion:
+        promotion.delete()
+
+    app.logger.info("Promotion with Name '%s' delete complete.", promotion_name)
+    return jsonify(msg="delete by name"), status.HTTP_204_NO_CONTENT
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
