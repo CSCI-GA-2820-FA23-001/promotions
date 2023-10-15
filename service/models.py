@@ -53,6 +53,10 @@ class Promotion(db.Model):
         """
         logger.info("Creating %s", self.name)
         self.id = None  # pylint: disable=invalid-name
+        if not self.name:
+            raise DataValidationError("Creates called with missing name")
+        if not self.products_type:
+            raise DataValidationError("Creates called with missing products_type ")
         if not self.require_code and self.promotion_code:
             raise DataValidationError(
                 "Creates called with promotion_code and require_code=False"

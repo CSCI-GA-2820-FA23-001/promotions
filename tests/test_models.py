@@ -157,6 +157,36 @@ class TestPromotionModel(unittest.TestCase):
         self.assertIsNone(promotion.id)
         self.assertRaises(DataValidationError, promotion.create)
 
+    def test_create_a_promotion_with_missing_name(self):
+        """It should not Create a promotion with missing_name"""
+        promotion = Promotion(
+            name=None,
+            description="Offer a special discount for first-time customers",
+            products_type="all_types",
+            promotion_code="6604876475937",
+            require_code=True,
+            start_date=date(2023, 10, 10),
+            end_date=date(2023, 9, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        self.assertRaises(DataValidationError, promotion.create)
+
+    def test_create_a_promotion_with_missing_products_type(self):
+        """It should not Create a promotion with missing_products_type"""
+        promotion = Promotion(
+            name="First time Shopper Discount",
+            description="Offer a special discount for first-time customers",
+            products_type=None,
+            promotion_code="6604876475937",
+            require_code=True,
+            start_date=date(2023, 10, 10),
+            end_date=date(2023, 9, 10),
+        )
+        self.assertIsNotNone(promotion)
+        self.assertIsNone(promotion.id)
+        self.assertRaises(DataValidationError, promotion.create)
+
     def test_create_a_promotion_with_wrong_start_and_end_date(self):
         """It should not Create a promotion with end date before start date"""
         promotion = Promotion(
@@ -325,9 +355,9 @@ class TestPromotionModel(unittest.TestCase):
         """It cannot Find a promotion by nonexistent id"""
         promotion = PromotionFactory()
         promotion.create()
-        id = promotion.id
+        id_temp = promotion.id
         self.assertEqual(len(Promotion.all()), 1)
-        promotion = Promotion.find(id + 1)
+        promotion = Promotion.find(id_temp + 1)
         self.assertIsNone(promotion)
 
     def test_find_by_name(self):
