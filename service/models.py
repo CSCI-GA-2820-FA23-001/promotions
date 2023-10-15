@@ -8,6 +8,7 @@ import logging
 # from enum import Enum
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 
 
 logger = logging.getLogger("flask.app")
@@ -37,11 +38,11 @@ class Promotion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(63), nullable=False)
     description = db.Column(db.String(63))
-    products_type = db.Column(db.String(63))
+    products_type = db.Column(db.String(63), nullable=False)
     promotion_code = db.Column(db.String(63))
     require_code = db.Column(db.Boolean(), nullable=False, default=False)
-    start_date = db.Column(db.Date())
-    end_date = db.Column(db.Date())
+    start_date = db.Column(db.Date(), nullable=False, default=date.today())
+    end_date = db.Column(db.Date(), nullable=False, default=date.today())
 
     def __repr__(self):
         return f"<Promotion {self.name} id=[{self.id}]>"
@@ -52,6 +53,16 @@ class Promotion(db.Model):
         """
         logger.info("Creating %s", self.name)
         self.id = None  # pylint: disable=invalid-name
+        if not self.name:
+            raise DataValidationError("Creates called with missing name")
+        if not self.products_type:
+            raise DataValidationError("Creates called with missing products_type ")
+        if not self.require_code and self.promotion_code:
+            raise DataValidationError(
+                "Creates called with promotion_code and require_code=False"
+            )
+        if self.start_date > self.end_date:
+            raise DataValidationError("Creates called with start_date > end_date")
         db.session.add(self)
         db.session.commit()
 
@@ -147,3 +158,29 @@ class Promotion(db.Model):
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
+
+    @classmethod
+    def find_by_products_type(cls, products_type):
+        """Returns all Promotion with the given products_type
+
+        Args:DataValidationError
+            name (string): the products_type of the Promotion you want to match
+        """
+        logger.info("Processing products_type query for %s ...", products_type)
+        return cls.query.filter(cls.products_type == products_type)
+
+    @classmethod
+    def find_by_date(cls, date_temp):
+        """Returns all Promotion with the given date (current day)
+
+        Args:DataValidationError
+            name (string): the products_type of the Promotion you want to match
+        """
+        logger.info("Processing products_type query for %s ...", date_temp)
+        # return cls.query.filter(
+        #     cls.start_date <= date_temp and cls.end_date >= date_temp
+        # )
+
+        return cls.query.filter(
+            and_(cls.start_date <= date_temp, cls.end_date >= date_temp)
+        )
