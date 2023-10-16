@@ -237,3 +237,24 @@ class TestPromotionServer(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_and_list_promotions(self):
+        """It should create three promotion and delete one"""
+        test_promotion = self._create_promotions(3)[0]
+        # list before deletion
+        response_list_before = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response_list_before.status_code, status.HTTP_200_OK)
+        data = response_list_before.get_json()
+        self.assertEqual(len(data), 3)
+        # delete
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # list after deletion
+        response_list_after = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response_list_after.status_code, status.HTTP_200_OK)
+        data = response_list_after.get_json()
+        self.assertEqual(len(data), 2)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
