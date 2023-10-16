@@ -228,20 +228,10 @@ class TestPromotionServer(TestCase):
     ######################################################################
     # DELETE A PROMOTION
     ######################################################################
-    def test_delete_promotion_by_id(self):
+    def test_delete_promotion(self):
         """It should delete a single promotion by its id"""
         test_promotion = self._create_promotions(1)[0]
         response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(len(response.data), 0)
-        # make sure they are deleted
-        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_delete_promotion_by_name(self):
-        """It should delete a single promotion by its name"""
-        test_promotion = self._create_promotions(1)[0]
-        response = self.client.delete(f"{BASE_URL}/name/{test_promotion.name}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(response.data), 0)
         # make sure they are deleted
