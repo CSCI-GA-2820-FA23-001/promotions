@@ -193,6 +193,17 @@ class TestPromotionServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     ######################################################################
+    # LIST ALL PROMOTIONS
+    ######################################################################
+    def test_list_promotions(self):
+        """It should list all promotion"""
+        self._create_promotions(5)
+        response = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
+
+    ######################################################################
     # READ A NEW PROMOTION
     ######################################################################
     def test_read_promotion(self):

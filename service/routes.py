@@ -82,6 +82,22 @@ def read_promotions(promotion_id):
 
 
 ######################################################################
+# LIST ALL PETS
+######################################################################
+
+
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the Promotions"""
+    app.logger.info("Request for promotion list")
+    promotions = Promotion.all()
+
+    results = [promotion.serialize() for promotion in promotions]
+    app.logger.info("Returning %d promotions", len(promotions))
+    return jsonify(results), status.HTTP_200_OK
+
+
+######################################################################
 # DELETE A PROMOTION
 ######################################################################
 
