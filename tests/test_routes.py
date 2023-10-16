@@ -230,7 +230,7 @@ class TestPromotionServer(TestCase):
     def test_delete_promotion_by_name(self):
         """It should delete a single promotion by its name"""
         test_promotion = self._create_promotions(1)[0]
-        response = self.client.delete(f"{BASE_URL}/{test_promotion.name}")
+        response = self.client.delete(f"{BASE_URL}/name/{test_promotion.name}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(response.data), 0)
         # make sure they are deleted

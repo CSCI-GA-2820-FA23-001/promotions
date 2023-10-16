@@ -80,6 +80,7 @@ def read_promotions(promotion_id):
     app.logger.info("Returning promotion: %s", promotion.name)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
+
 ######################################################################
 # DELETE A PROMOTION
 ######################################################################
@@ -101,7 +102,7 @@ def delete_promotions_by_id(promotion_id):
     return jsonify(msg="delete by id"), status.HTTP_204_NO_CONTENT
 
 
-@app.route("/promotions/<string:promotion_name>", methods=["DELETE"])
+@app.route("/promotions/name/<string:promotion_name>", methods=["DELETE"])
 def delete_promotions_by_name(promotion_name):
     """
     Delete a Promotion by Name
