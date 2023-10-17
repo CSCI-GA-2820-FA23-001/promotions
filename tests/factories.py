@@ -57,13 +57,26 @@ class PromotionFactory(factory.Factory):
 
     @factory.lazy_attribute
     def promotion_code(self):
+        """
+        Generate a promotion code if require_code is True.
+
+        Returns:
+            str: The generated promotion code if require_code is True, else None.
+        """
         if self.require_code:
             temp = factory.Faker("pystr")
-            return "%s" % temp
+            return f"{temp}"
+        return None
 
     start_date = FuzzyDate(date(2008, 1, 1))
 
     @factory.lazy_attribute
     def end_date(self):
+        """
+        Generate an end date based on the start date.
+
+        Returns:
+          datetime: An end date generated after the start date.
+        """
         date_s = self.start_date
         return FuzzyDate(date_s).fuzz()
