@@ -28,6 +28,13 @@ These should be copied using a bash shell as follows:
     cp .gitattributes ../<your_repo_folder>/
 ```
 
+## Run
+
+Make sure to set any required environment variables before running the app. Run the Flask App locally by typing the following command:
+```
+flask run
+```
+
 ## Contents
 
 The project contains the following:
