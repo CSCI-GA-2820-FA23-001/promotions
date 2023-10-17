@@ -258,3 +258,49 @@ class TestPromotionServer(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    ######################################################################
+    # UPDATE EXISTING PROMOTION
+    ######################################################################
+    def test_update_promotion(self):
+        """It should Update an existing Promotion"""
+        # Create a promotion to update
+        test_promotion = PromotionFactory()
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Update the promotion
+        new_promotion = response.get_json()
+        promotion_id = new_promotion["id"]
+
+        logging.debug(new_promotion)
+        new_promotion["promotion_code"] = "UPDATED123"
+        response = self.client.put(f"{BASE_URL}/{promotion_id}", json=new_promotion)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_promotion = response.get_json()
+        self.assertEqual(updated_promotion["promotion_code"], "UPDATED123")
+
+    def test_update_nonexistent_promotion(self):
+        """It should return a 404 Not Found when updating a non-existent promotion"""
+        # Attempt to update a promotion with a non-existent ID
+        non_existent_promotion_id = 9999  # Assuming this ID does not exist
+
+        new_promotion_data = {
+            "name": "Updated Promotion",
+            "description": "Updated description",
+            "products_type": "Updated Type",
+            "promotion_code": "UPDATED123",
+            "require_code": True,
+            "start_date": "2023-10-01",
+            "end_date": "2023-10-31",
+        }
+
+        response = self.client.put(
+            f"{BASE_URL}/{non_existent_promotion_id}", json=new_promotion_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Check if the response contains an appropriate error message
+        error_message = response.get_json()["message"]
+        self.assertIn("was not found", error_message)
