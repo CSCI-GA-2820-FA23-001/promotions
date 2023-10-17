@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 
-This is a skeleton you can use to start your projects
+This repository contains code for Customer promotions for an e-commerce web site.
 
 ## Overview
 
@@ -55,13 +55,19 @@ tests/              - test cases package
 └── test_routes.py  - test suite for service routes
 ```
 
-## License
+## Database model:
+Promotion:
+| Field | Type | Constraints |
+|-------|--------|------------|
+| id | Integer | primary key |
+| name | String(63) | not nullable |
+| description | String(63) | - |
+| products_type | String(63) | not nullable |
+| promotion_code | String(63) | - |
+| require_code | Boolean | not nullable, default: False |
+| start_date | Date | not nullable, default: today's date |
+| end_date | Date | not nullable, default: today's date |
 
-Copyright (c) John Rofrano. All rights reserved.
-
-Licensed under the Apache License. See [LICENSE](LICENSE)
-
-This repository is part of the NYU masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by *John Rofrano*, Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.
 
 
 ## Available Commands
@@ -73,3 +79,12 @@ list_promotions    GET      /promotions
 read_promotions    GET      /promotions/<int:promotion_id>
 static             GET      /static/<path:filename>
 ```
+
+
+## License
+
+Copyright (c) John Rofrano. All rights reserved.
+
+Licensed under the Apache License. See [LICENSE](LICENSE)
+
+This repository is part of the NYU masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by *John Rofrano*, Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.
