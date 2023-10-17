@@ -8,7 +8,7 @@ This repository contains code for Customer promotions for an e-commerce web site
 ## Overview
 
 
-This repository contains the project undertaken by the Promotion Squad for CSCI-GA.2820-001 DevOps and Agile Methodologies. The project established the promotional functionalities of an e-commerce website, empowering customers to take advantage of various promotions for discounts. It provides all the essential operations, enabling users to create, read, update, and delete promotions by using the RESTful API. Each promotion is detailed with information such as id, name, description, start date, and more, all stored within a PostgreSQL database model.
+This repository contains the project undertaken by the Promotion Squad for CSCI-GA.2820-001 DevOps and Agile Methodologies. The project established the promotional functionalities of an e-commerce website, empowering customers to take advantage of various promotions for discounts. It provides all the essential operations, enabling users to create, read, update, delete, and list promotions by using the RESTful API. Each promotion is detailed with information such as id, name, description, start date, and more, all stored within a PostgreSQL database model.
 
 ## Automatic Setup
 
