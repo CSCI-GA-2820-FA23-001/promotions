@@ -77,6 +77,7 @@ delete_promotions  DELETE   /promotions/<int:promotion_id>
 index              GET      /                             
 list_promotions    GET      /promotions                   
 read_promotions    GET      /promotions/<int:promotion_id>
+update_promotions  PUT      /promotions/<int:promotion_id>
 static             GET      /static/<path:filename>
 ```
 
