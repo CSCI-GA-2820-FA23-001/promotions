@@ -82,6 +82,43 @@ def read_promotions(promotion_id):
 
 
 ######################################################################
+# LIST ALL PETS
+######################################################################
+
+
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the Promotions"""
+    app.logger.info("Request for promotion list")
+    promotions = Promotion.all()
+
+    results = [promotion.serialize() for promotion in promotions]
+    app.logger.info("Returning %d promotions", len(promotions))
+    return jsonify(results), status.HTTP_200_OK
+
+
+######################################################################
+# DELETE A PROMOTION
+######################################################################
+
+
+@app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
+def delete_promotions(promotion_id):
+    """
+    Delete a Promotion by ID
+
+    This endpoint will delete a Promotion based on the id specified in the path
+    """
+    app.logger.info("Request for delete promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if promotion:
+        promotion.delete()
+
+    app.logger.info("Promotion with ID [%s] delete complete.", promotion_id)
+    return "", status.HTTP_204_NO_CONTENT
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
