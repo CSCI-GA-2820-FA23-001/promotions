@@ -62,3 +62,14 @@ Copyright (c) John Rofrano. All rights reserved.
 Licensed under the Apache License. See [LICENSE](LICENSE)
 
 This repository is part of the NYU masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by *John Rofrano*, Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.
+
+
+## Available Commands
+```
+create_promotions  POST     /promotions                   
+delete_promotions  DELETE   /promotions/<int:promotion_id>
+index              GET      /                             
+list_promotions    GET      /promotions                   
+read_promotions    GET      /promotions/<int:promotion_id>
+static             GET      /static/<path:filename>
+```

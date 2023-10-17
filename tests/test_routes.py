@@ -8,11 +8,11 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
+from datetime import date
 from service import app
 from service.models import db, Promotion, init_db
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
-from datetime import date
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -193,6 +193,17 @@ class TestPromotionServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     ######################################################################
+    # LIST ALL PROMOTIONS
+    ######################################################################
+    def test_list_promotions(self):
+        """It should list all promotion"""
+        self._create_promotions(5)
+        response = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
+
+    ######################################################################
     # READ A NEW PROMOTION
     ######################################################################
     def test_read_promotion(self):
@@ -213,6 +224,40 @@ class TestPromotionServer(TestCase):
         self.assertIn(
             "was not found", data["message"]
         )  # message contains a message related to an error or status information from the server.
+
+    ######################################################################
+    # DELETE A PROMOTION
+    ######################################################################
+    def test_delete_promotion(self):
+        """It should delete a single promotion by its id"""
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_and_list_promotions(self):
+        """It should create three promotion and delete one"""
+        test_promotion = self._create_promotions(3)[0]
+        # list before deletion
+        response_list_before = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response_list_before.status_code, status.HTTP_200_OK)
+        data = response_list_before.get_json()
+        self.assertEqual(len(data), 3)
+        # delete
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # list after deletion
+        response_list_after = self.client.get(f"{BASE_URL}")
+        self.assertEqual(response_list_after.status_code, status.HTTP_200_OK)
+        data = response_list_after.get_json()
+        self.assertEqual(len(data), 2)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     ######################################################################
     # UPDATE EXISTING PROMOTION
