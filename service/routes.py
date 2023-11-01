@@ -82,7 +82,7 @@ def read_promotions(promotion_id):
 
 
 ######################################################################
-# LIST ALL PETS
+# LIST ALL PROMOTIONS
 ######################################################################
 
 
@@ -90,7 +90,15 @@ def read_promotions(promotion_id):
 def list_promotions():
     """Returns all of the Promotions"""
     app.logger.info("Request for promotion list")
+
+    products_type = request.args.get("products_type")
+
     promotions = Promotion.all()
+
+    if products_type:
+        promotions = [
+            promo for promo in promotions if promo.products_type == products_type
+        ]
 
     results = [promotion.serialize() for promotion in promotions]
     app.logger.info("Returning %d promotions", len(promotions))
