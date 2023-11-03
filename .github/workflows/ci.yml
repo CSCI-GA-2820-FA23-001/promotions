@@ -65,6 +65,7 @@ jobs:
         run: |
           export FLASK_APP=service:app
           green -q
+          coverage report --fail-under=95
         env:
           DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
 
