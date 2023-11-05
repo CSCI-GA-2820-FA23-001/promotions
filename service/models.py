@@ -3,6 +3,9 @@ Models for Promotion
 
 All of the models are stored in this module
 """
+
+# pylint: disable=too-many-instance-attributes
+
 import logging
 
 # from enum import Enum
