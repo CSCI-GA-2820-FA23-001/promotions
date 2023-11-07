@@ -3,7 +3,7 @@ My Service
 
 Describe what your service does here
 """
-
+from datetime import datetime
 from flask import jsonify, request, url_for, abort
 from service.common import status  # HTTP Status Codes
 from service.models import Promotion
@@ -93,12 +93,42 @@ def list_promotions():
 
     products_type = request.args.get("products_type")
 
+    start_date_filter = request.args.get("start_date")
+    end_date_filter = request.args.get("end_date")
+
     promotions = Promotion.all()
 
+    # Filter by product type if specified
     if products_type:
         promotions = [
             promo for promo in promotions if promo.products_type == products_type
         ]
+
+    # Filter by start date if specified
+    if start_date_filter:
+        try:
+            start_date = datetime.strptime(start_date_filter, "%Y-%m-%d").date()
+            promotions = [
+                promo for promo in promotions if promo.start_date >= start_date
+            ]
+        except ValueError as e:
+            app.logger.error(f"Invalid start_date format: {start_date_filter}")
+            abort(
+                status.HTTP_400_BAD_REQUEST,
+                f"Invalid start_date format: {start_date_filter}",
+            )
+
+    # Filter by end date if specified
+    if end_date_filter:
+        try:
+            end_date = datetime.strptime(end_date_filter, "%Y-%m-%d").date()
+            promotions = [promo for promo in promotions if promo.end_date <= end_date]
+        except ValueError as e:
+            app.logger.error(f"Invalid end_date format: {end_date_filter}")
+            abort(
+                status.HTTP_400_BAD_REQUEST,
+                f"Invalid end_date format: {end_date_filter}",
+            )
 
     results = [promotion.serialize() for promotion in promotions]
     app.logger.info("Returning %d promotions", len(promotions))
