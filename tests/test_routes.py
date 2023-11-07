@@ -9,12 +9,12 @@ import os
 import logging
 from unittest import TestCase
 from urllib.parse import quote_plus
+from datetime import datetime
 from datetime import date
 from service import app
 from service.models import db, Promotion, init_db
 from service.common import status  # HTTP Status Codes
 from tests.factories import PromotionFactory
-from datetime import datetime
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -254,7 +254,7 @@ class TestPromotionServer(TestCase):
     def test_list_promotions_by_invalid_start_date(self):
         """It should filter promotions by invalid start date"""
 
-        promotions = self._create_promotions(20)
+        self._create_promotions(20)
         start_date = "invalid_start_date_format"
 
         response = self.client.get(
@@ -295,7 +295,7 @@ class TestPromotionServer(TestCase):
     def test_list_promotions_by_invalid_end_date(self):
         """It should filter promotions by invalid end date"""
 
-        promotions = self._create_promotions(20)
+        self._create_promotions(20)
         end_date = "invalid_end_date_format"
 
         response = self.client.get(

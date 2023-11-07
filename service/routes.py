@@ -111,8 +111,8 @@ def list_promotions():
             promotions = [
                 promo for promo in promotions if promo.start_date >= start_date
             ]
-        except ValueError as e:
-            app.logger.error(f"Invalid start_date format: {start_date_filter}")
+        except ValueError:
+            app.logger.info("Invalid start_date format: {start_date_filter}")
             abort(
                 status.HTTP_400_BAD_REQUEST,
                 f"Invalid start_date format: {start_date_filter}",
@@ -123,8 +123,8 @@ def list_promotions():
         try:
             end_date = datetime.strptime(end_date_filter, "%Y-%m-%d").date()
             promotions = [promo for promo in promotions if promo.end_date <= end_date]
-        except ValueError as e:
-            app.logger.error(f"Invalid end_date format: {end_date_filter}")
+        except ValueError:
+            app.logger.info("Invalid end_date format: {end_date_filter}")
             abort(
                 status.HTTP_400_BAD_REQUEST,
                 f"Invalid end_date format: {end_date_filter}",
