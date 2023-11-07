@@ -9,6 +9,7 @@ import os
 import logging
 from unittest import TestCase
 from urllib.parse import quote_plus
+from datetime import datetime
 from datetime import date
 from service import app
 from service.models import db, Promotion, init_db
@@ -223,6 +224,90 @@ class TestPromotionServer(TestCase):
         # check the data just to be sure
         for promotion in data:
             self.assertEqual(promotion["products_type"], test_products_type)
+
+    def test_list_promotions_by_valid_start_date(self):
+        """It should filter promotions by valid start date"""
+        promotions = self._create_promotions(20)
+        start_date = "2023-01-01"
+
+        test_start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+
+        start_date_filter_promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.start_date >= test_start_date
+        ]
+
+        response = self.client.get(
+            "/promotions",
+            query_string=f"start_date={quote_plus(start_date)}",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(start_date_filter_promotions))
+
+        # check the data just to be sure
+        for promotion in data:
+            self.assertGreaterEqual(promotion["start_date"], start_date)
+
+    def test_list_promotions_by_invalid_start_date(self):
+        """It should filter promotions by invalid start date"""
+
+        self._create_promotions(20)
+        start_date = "invalid_start_date_format"
+
+        response = self.client.get(
+            "/promotions",
+            query_string=f"start_date={quote_plus(start_date)}",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Check if the response contains an appropriate error message
+        error_message = response.get_json()["message"]
+        self.assertIn("Invalid start_date format", error_message)
+
+    def test_list_promotions_by_valid_end_date(self):
+        """It should filter promotions by valid end date"""
+        promotions = self._create_promotions(20)
+        end_date = "2024-01-01"
+
+        test_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        end_date_filter_promotions = [
+            promotion for promotion in promotions if promotion.end_date <= test_end_date
+        ]
+
+        response = self.client.get(
+            "/promotions",
+            query_string=f"end_date={quote_plus(end_date)}",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(end_date_filter_promotions))
+
+        # check the data just to be sure
+        for promotion in data:
+            self.assertLessEqual(promotion["end_date"], end_date)
+
+    def test_list_promotions_by_invalid_end_date(self):
+        """It should filter promotions by invalid end date"""
+
+        self._create_promotions(20)
+        end_date = "invalid_end_date_format"
+
+        response = self.client.get(
+            "/promotions",
+            query_string=f"end_date={quote_plus(end_date)}",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Check if the response contains an appropriate error message
+        error_message = response.get_json()["message"]
+        self.assertIn("Invalid end_date format", error_message)
 
     ######################################################################
     # READ A NEW PROMOTION
