@@ -205,6 +205,23 @@ class TestPromotionServer(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 5)
 
+    def test_list_promotions_by_name(self):
+        """It should Filter promotions by name"""
+        promotions = self._create_promotions(10)
+        test_name = promotions[0].name
+        name_promotions = [
+            promotion for promotion in promotions if promotion.name == test_name
+        ]
+        response = self.client.get(
+            BASE_URL, query_string=f"name={quote_plus(test_name)}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(name_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["name"], test_name)
+
     def test_list_promotions_by_products_type(self):
         """It should Filter promotions by products type"""
         promotions = self._create_promotions(10)

@@ -91,12 +91,18 @@ def list_promotions():
     """Returns all of the Promotions"""
     app.logger.info("Request for promotion list")
 
+    name = request.args.get("name")
+
     products_type = request.args.get("products_type")
 
     start_date_filter = request.args.get("start_date")
     end_date_filter = request.args.get("end_date")
 
     promotions = Promotion.all()
+
+    # Filter by product name if specified
+    if name:
+        promotions = [promotion for promotion in promotions if promotion.name == name]
 
     # Filter by product type if specified
     if products_type:
