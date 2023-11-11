@@ -95,6 +95,8 @@ def list_promotions():
 
     products_type = request.args.get("products_type")
 
+    require_code = request.args.get("require_code")
+
     start_date_filter = request.args.get("start_date")
     end_date_filter = request.args.get("end_date")
 
@@ -108,6 +110,15 @@ def list_promotions():
     if products_type:
         promotions = [
             promo for promo in promotions if promo.products_type == products_type
+        ]
+
+    # Filter by require_code if specified
+    if require_code:
+        require_code_bool = require_code.lower() == "true"
+        promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.require_code == require_code_bool
         ]
 
     # Filter by start date if specified

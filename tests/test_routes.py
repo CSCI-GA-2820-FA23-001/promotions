@@ -242,6 +242,26 @@ class TestPromotionServer(TestCase):
         for promotion in data:
             self.assertEqual(promotion["products_type"], test_products_type)
 
+    def test_list_promotions_by_require_code(self):
+        """It should Filter promotions by require_code"""
+        promotions = self._create_promotions(10)
+        test_require_code = promotions[0].require_code
+        require_code_promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.require_code == test_require_code
+        ]
+        test_require_code_str = str(test_require_code).lower()
+        response = self.client.get(
+            BASE_URL, query_string=f"require_code={quote_plus(test_require_code_str)}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(require_code_promotions))
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["require_code"], test_require_code)
+
     def test_list_promotions_by_valid_start_date(self):
         """It should filter promotions by valid start date"""
         promotions = self._create_promotions(20)
