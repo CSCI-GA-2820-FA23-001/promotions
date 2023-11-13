@@ -204,6 +204,57 @@ def update_promotions(promotion_id):
 
 
 ######################################################################
+# ACTIVE A PROMOTION
+######################################################################
+
+
+@app.route("/promotions/<int:promotion_id>/activate", methods=["PUT"])
+def activate_promotion(promotion_id):
+    """
+    Activate a promotion
+
+    This endpoint will set a promotion's is_active to True based on the id specified in the path
+    """
+
+    app.logger.info("Request to activate promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
+
+    promotion.activate()
+    app.logger.info("Promotion with ID [%s] activated.", promotion_id)
+
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+# DEACTIVE A PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>/deactivate", methods=["PUT"])
+def deactivate_promotion(promotion_id):
+    """
+    Deactivate a promotion
+
+    This endpoint will set a promotion's is_active to False based on the id specified in the path
+    """
+    app.logger.info("Request to deactivate promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
+
+    promotion.deactivate()
+    app.logger.info("Promotion with ID [%s] deactivated.", promotion_id)
+
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

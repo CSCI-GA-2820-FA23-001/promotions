@@ -80,3 +80,5 @@ class PromotionFactory(factory.Factory):
         """
         date_s = self.start_date
         return FuzzyDate(date_s).fuzz()
+
+    is_active = FuzzyChoice(choices=[True, False])

@@ -447,3 +447,62 @@ class TestPromotionServer(TestCase):
         # Check if the response contains an appropriate error message
         error_message = response.get_json()["message"]
         self.assertIn("was not found", error_message)
+
+    ######################################################################
+    # ACTIVE A PROMOTION
+    ######################################################################
+    def test_activate_promotion(self):
+        """It should Activate an existing Promotion"""
+        # Create a promotion to activate
+        test_promotion = self._create_promotions(1)[0]
+
+        # Activate the promotion using PUT request
+        response = self.client.put(f"{BASE_URL}/{test_promotion.id}/activate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Get the promotion and check if it is active
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertTrue(data["is_active"])
+
+    def test_activate_promotion_not_found(self):
+        """It should return a 404 Not Found when activating a non-existent promotion"""
+        non_existent_promotion_id = (
+            9999  # Assuming this ID does not exist in the test database
+        )
+        response = self.client.put(f"/promotions/{non_existent_promotion_id}/activate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        self.assertIn("was not found", data["message"])
+
+    ######################################################################
+    # DEACTIVE A PROMOTION
+    ######################################################################
+    def test_deactivate_promotion(self):
+        """It should Deactivate an existing Promotion"""
+        # Create and activate a promotion
+        test_promotion = self._create_promotions(1)[0]
+        self.client.put(f"{BASE_URL}/{test_promotion.id}/activate")
+
+        # Deactivate the promotion using PUT request
+        response = self.client.put(f"{BASE_URL}/{test_promotion.id}/deactivate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Get the promotion and check if it is inactive
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertFalse(data["is_active"])
+
+    def test_deactivate_promotion_not_found(self):
+        """It should return a 404 Not Found when activating a non-existent promotion"""
+        non_existent_promotion_id = (
+            9999  # Assuming this ID does not exist in the test database
+        )
+        response = self.client.put(
+            f"/promotions/{non_existent_promotion_id}/deactivate"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        self.assertIn("was not found", data["message"])

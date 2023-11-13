@@ -46,6 +46,7 @@ class Promotion(db.Model):
     require_code = db.Column(db.Boolean(), nullable=False, default=False)
     start_date = db.Column(db.Date(), nullable=False, default=date.today())
     end_date = db.Column(db.Date(), nullable=False, default=date.today())
+    is_active = db.Column(db.Boolean(), nullable=False, default=False)
 
     def __repr__(self):
         return f"<Promotion {self.name} id=[{self.id}]>"
@@ -95,6 +96,7 @@ class Promotion(db.Model):
             "require_code": self.require_code,
             "start_date": self.start_date.isoformat(),
             "end_date": self.end_date.isoformat(),
+            "is_active": self.is_active,
         }
 
     def deserialize(self, data):
@@ -118,6 +120,7 @@ class Promotion(db.Model):
                 )
             self.start_date = date.fromisoformat(data["start_date"])
             self.end_date = date.fromisoformat(data["end_date"])
+            self.is_active = data["is_active"]
 
         except KeyError as error:
             raise DataValidationError(
@@ -129,6 +132,22 @@ class Promotion(db.Model):
                 "Error message: " + str(error)
             ) from error
         return self
+
+    def activate(self):
+        """
+        set the id_active status to true to active promotion
+        """
+        logger.info("Activating promotion %s", self.name)
+        self.is_active = True
+        db.session.commit()
+
+    def deactivate(self):
+        """
+        set the id_active status to false to deactive promotion
+        """
+        logger.info("Deactivating promotion %s", self.name)
+        self.is_active = False
+        db.session.commit()
 
     @classmethod
     def init_db(cls, app):
