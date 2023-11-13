@@ -59,6 +59,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=True,
             start_date=date(2023, 9, 10),
             end_date=date(2023, 10, 10),
+            is_active=False,
         )
 
         self.assertEqual(
@@ -75,6 +76,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.require_code, True)
         self.assertEqual(promotion.start_date, date(2023, 9, 10))
         self.assertEqual(promotion.end_date, date(2023, 10, 10))
+        self.assertEqual(promotion.is_active, False)
 
         promotion = Promotion(
             name="Buy One, Get One Free",
@@ -83,6 +85,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=False,
             start_date=date(2023, 9, 9),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
 
         self.assertEqual(str(promotion), "<Promotion Buy One, Get One Free id=[None]>")
@@ -94,6 +97,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.require_code, False)
         self.assertEqual(promotion.start_date, date(2023, 9, 9))
         self.assertEqual(promotion.end_date, date(2023, 9, 10))
+        self.assertEqual(promotion.is_active, False)
 
     def test_create_a_promotion_to_database(self):
         """It should Create a promotion and add it to the database"""
@@ -107,6 +111,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=True,
             start_date=date(2023, 9, 10),
             end_date=date(2023, 10, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -121,6 +126,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=False,
             start_date=date(2023, 9, 9),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -133,6 +139,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=False,
             start_date=date(2023, 9, 9),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -152,6 +159,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=False,
             start_date=date(2023, 9, 10),
             end_date=date(2023, 10, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -167,6 +175,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=True,
             start_date=date(2023, 10, 10),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -182,6 +191,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=True,
             start_date=date(2023, 10, 10),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -197,6 +207,7 @@ class TestPromotionModel(unittest.TestCase):
             require_code=True,
             start_date=date(2023, 10, 10),
             end_date=date(2023, 9, 10),
+            is_active=False,
         )
         self.assertIsNotNone(promotion)
         self.assertIsNone(promotion.id)
@@ -222,6 +233,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(found_promotion.require_code, promotion.require_code)
         self.assertEqual(found_promotion.start_date, promotion.start_date)
         self.assertEqual(found_promotion.end_date, promotion.end_date)
+        self.assertEqual(found_promotion.is_active, promotion.is_active)
 
     def test_update_a_promotion(self):
         """It should Update a promotion"""
@@ -293,6 +305,8 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(date.fromisoformat(data["start_date"]), promotion.start_date)
         self.assertIn("end_date", data)
         self.assertEqual(date.fromisoformat(data["end_date"]), promotion.end_date)
+        self.assertIn("is_active", data)
+        self.assertEqual(data["is_active"], promotion.is_active)
 
     def test_deserialize_a_promotion(self):
         """It should de-serialize a promotion"""
@@ -309,6 +323,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.require_code, data["require_code"])
         self.assertEqual(promotion.start_date, date.fromisoformat(data["start_date"]))
         self.assertEqual(promotion.end_date, date.fromisoformat(data["end_date"]))
+        self.assertEqual(promotion.is_active, data["is_active"])
 
     def test_deserialize_missing_data(self):
         """It should not deserialize a promotion with missing data"""
@@ -328,6 +343,37 @@ class TestPromotionModel(unittest.TestCase):
         data["require_code"] = "true"
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
+
+    def test_activate_promotion(self):
+        """It should activate a promotion"""
+        # Create a sample promotion
+        promotion = PromotionFactory()
+        promotion.create()
+        self.assertFalse(promotion.is_active)
+
+        # Activate the promotion
+        promotion.activate()
+        self.assertTrue(promotion.is_active)
+
+        # Fetch it back
+        found_promotion = Promotion.find(promotion.id)
+        self.assertTrue(found_promotion.is_active)
+
+    def test_deactivate_promotion(self):
+        """It should deactivate a promotion"""
+        # Create a sample promotion
+        promotion = PromotionFactory()
+        promotion.create()
+        promotion.activate()  # First activate it
+        self.assertTrue(promotion.is_active)
+
+        # Deactivate the promotion
+        promotion.deactivate()
+        self.assertFalse(promotion.is_active)
+
+        # Fetch it back
+        found_promotion = Promotion.find(promotion.id)
+        self.assertFalse(found_promotion.is_active)
 
     def test_find_promotion(self):
         """It should Find a promotion by id"""
@@ -350,6 +396,7 @@ class TestPromotionModel(unittest.TestCase):
         self.assertEqual(promotion.require_code, promotions[1].require_code)
         self.assertEqual(promotion.start_date, promotions[1].start_date)
         self.assertEqual(promotion.end_date, promotions[1].end_date)
+        self.assertEqual(promotion.is_active, promotions[1].is_active)
 
     def test_find_promotion_nonexistent_id(self):
         """It cannot Find a promotion by nonexistent id"""
