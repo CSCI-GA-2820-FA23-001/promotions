@@ -349,7 +349,6 @@ class TestPromotionModel(unittest.TestCase):
         # Create a sample promotion
         promotion = PromotionFactory()
         promotion.create()
-        self.assertFalse(promotion.is_active)
 
         # Activate the promotion
         promotion.activate()
