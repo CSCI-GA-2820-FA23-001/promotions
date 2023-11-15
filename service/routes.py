@@ -87,7 +87,7 @@ def read_promotions(promotion_id):
 
 
 @app.route("/promotions", methods=["GET"])
-def list_promotions():
+def list_promotions():  # noqa: C901
     """Returns all of the Promotions"""
     app.logger.info("Request for promotion list")
 
