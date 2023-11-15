@@ -346,6 +346,29 @@ class TestPromotionServer(TestCase):
         error_message = response.get_json()["message"]
         self.assertIn("Invalid end_date format", error_message)
 
+    def test_list_promotions_by_discounted_products_list(self):
+        """It should Filter promotions by discounted_products_list"""
+
+        promotions = self._create_promotions(10)
+        test_discounted_products_list = [promotions[0].id, promotions[1].id]
+
+        product_ids_query = ",".join(map(str, test_discounted_products_list))
+
+        response = self.client.get(
+            BASE_URL,
+            query_string=f"discounted_products={quote_plus(product_ids_query)}",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+
+        self.assertEqual(len(data), len(test_discounted_products_list))
+
+        returned_promotion_ids = [promo["id"] for promo in data]
+
+        # Check if the IDs in the response match the IDs in the test list
+        for promo_id in test_discounted_products_list:
+            self.assertIn(promo_id, returned_promotion_ids)
+
     ######################################################################
     # READ A NEW PROMOTION
     ######################################################################

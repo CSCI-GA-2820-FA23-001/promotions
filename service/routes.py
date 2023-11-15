@@ -87,7 +87,7 @@ def read_promotions(promotion_id):
 
 
 @app.route("/promotions", methods=["GET"])
-def list_promotions():
+def list_promotions():  # noqa: C901
     """Returns all of the Promotions"""
     app.logger.info("Request for promotion list")
 
@@ -99,6 +99,8 @@ def list_promotions():
 
     start_date_filter = request.args.get("start_date")
     end_date_filter = request.args.get("end_date")
+
+    discounted_products_list = request.args.get("discounted_products")
 
     promotions = Promotion.all()
 
@@ -146,6 +148,18 @@ def list_promotions():
                 status.HTTP_400_BAD_REQUEST,
                 f"Invalid end_date format: {end_date_filter}",
             )
+
+    # filter by discounted_products
+    if discounted_products_list:
+        discounted_products_intlist = list(
+            map(int, discounted_products_list.split(","))
+        )
+
+        promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.id in discounted_products_intlist
+        ]
 
     results = [promotion.serialize() for promotion in promotions]
     app.logger.info("Returning %d promotions", len(promotions))
