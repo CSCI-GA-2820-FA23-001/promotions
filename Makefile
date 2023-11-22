@@ -61,7 +61,6 @@ login: ## Login to IBM Cloud using yur api key
 	kubectl cluster-info
 
 .PHONY: deploy
-depoy: ## Deploy the service on local Kubernetes
+deploy: ## Deploy the service on local Kubernetes
 	$(info Deploying service locally...)
-	kubectl apply -f deploy/
-
+	kubectl apply -f k8s/
