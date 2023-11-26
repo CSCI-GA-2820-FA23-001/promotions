@@ -79,8 +79,7 @@ class TestPromotionServer(TestCase):
         """It should call the home page"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
-        self.assertEqual(data["name"], "Promotion REST API Service")
+        self.assertIn(b"Promotion REST API Service", resp.data)
 
     def test_health(self):
         """It should be healthy"""
