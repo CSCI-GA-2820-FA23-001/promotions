@@ -27,14 +27,15 @@ def healthcheck():
 @app.route("/")
 def index():
     """Root URL response"""
-    return (
-        # "Reminder: return some useful information in json format about the service here",
-        jsonify(
-            name="Promotion REST API Service",
-            version="1.0",
-        ),
-        status.HTTP_200_OK,
-    )
+    # return (
+    #     # "Reminder: return some useful information in json format about the service here",
+    #     jsonify(
+    #         name="Promotion REST API Service",
+    #         version="1.0",
+    #     ),
+    #     status.HTTP_200_OK,
+    # )
+    return app.send_static_file("index.html")
 
 
 ######################################################################
