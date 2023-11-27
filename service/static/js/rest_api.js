@@ -6,25 +6,36 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#pet_id").val(res.id);
-        $("#pet_name").val(res.name);
-        $("#pet_category").val(res.category);
-        if (res.available == true) {
-            $("#pet_available").val("true");
+        $("#promotion_id").val(res.id);
+        $("#promotion_name").val(res.name);
+        $("#promotion_description").val(res.description);
+        $("#products_type").val(res.products_type);
+        $("#promotion_code").val(res.promotion_code);
+        if (res.require_code == true) {
+            $("#promotion_require_code").val("true");
         } else {
-            $("#pet_available").val("false");
+            $("#promotion_require_code").val("false");
         }
-        $("#pet_gender").val(res.gender);
-        $("#pet_birthday").val(res.birthday);
+        $("#promotion_start_date").val(res.start_date);
+        $("#promotion_end_date").val(res.end_date);
+        if (res.is_active == true) {
+            $("#promotion_is_active").val("true");
+        } else {
+            $("#promotion_is_active").val("false");
+        }
     }
 
     /// Clears all form fields
     function clear_form_data() {
-        $("#pet_name").val("");
-        $("#pet_category").val("");
-        $("#pet_available").val("");
-        $("#pet_gender").val("");
-        $("#pet_birthday").val("");
+        $("#promotion_id").val("");
+        $("#promotion_name").val("");
+        $("#promotion_description").val("");
+        $("#products_type").val("");
+        $("#promotion_code").val("");
+        $("#promotion_require_code").val("");
+        $("#promotion_start_date").val("");
+        $("#promotion_end_date").val("");
+        $("#promotion_is_active").val("");
     }
 
     // Updates the flash message area
@@ -39,25 +50,31 @@ $(function () {
 
     $("#create-btn").click(function () {
 
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-        let gender = $("#pet_gender").val();
-        let birthday = $("#pet_birthday").val();
+        let name = $("#promotion_name").val();
+        let description = $("#promotion_description").val();
+        let products_type = $("#products_type").val();
+        let promotion_code = $("#promotion_code").val();
+        let require_code = $("#promotion_require_code").val() == "true";
+        let start_date = $("#promotion_start_date").val();
+        let end_date = $("#promotion_end_date").val();
+        let is_active = $("#promotion_is_active").val() == "true";
 
         let data = {
             "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "description": description,
+            "products_type": products_type,
+            "promotion_code": promotion_code,
+            "require_code": require_code,
+            "start_date": start_date,
+            "end_date": end_date,
+            "is_active": is_active
         };
 
         $("#flash_message").empty();
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/pets",
+            url: "/promotions",
             contentType: "application/json",
             data: JSON.stringify(data),
         });
