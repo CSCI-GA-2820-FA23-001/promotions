@@ -38,6 +38,7 @@
             </div>
           </div> <!-- form horizontal -->
 
+
           <div class="form-horizontal">
 
             <!-- NAME -->
@@ -48,45 +49,67 @@
               </div>
             </div>
 
-            <!-- CATEGORY -->
+            <!-- DESCRIPTION -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_category">Category:</label>
+              <label class="control-label col-sm-2" for="promotion_description">Description:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="promotion_category" placeholder="Enter category for Promotion">
+                <input type="text" class="form-control" id="promotion_description" placeholder="Enter description for Promotion">
               </div>
             </div>
 
-            <!-- AVAILABLE -->
+            <!-- PRODUCTS_TYPE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_available">Available:</label>
+              <label class="control-label col-sm-2" for="products_type">Products Type:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="promotion_available">
+                <input type="text" class="form-control" id="products_type" placeholder="Enter products type for Promotion">
+              </div>
+            </div>
+
+            <!-- REQUIRE_CODE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_require_code">Require Code:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="promotion_require_code">
                   <option value="true" selected>True</option>
                   <option value="false">False</option>
                 </select>
               </div>
             </div>
 
-            <!-- GENDER -->
+            <!-- PROMOTION_CODE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_gender">Gender:</label>
+              <label class="control-label col-sm-2" for="promotion_code">Promotion Code:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="promotion_gender">
-                  <option value="UNKNOWN" selected>Unknown</option>
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
+                <input type="text" class="form-control" id="promotion_code" placeholder="Enter promotion code for Promotion">
+              </div>
+            </div>
+
+            <!-- START_DATE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_start_date">Start Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="promotion_start_date" placeholder="2000-01-01">
+              </div>
+            </div>
+            
+            <!-- END_DATE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_end_date">End Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="promotion_end_date" placeholder="2000-01-01">
+              </div>
+            </div>
+
+            <!-- IS_ACTIVE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_is_active">Active:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="promotion_is_active">
+                  <option value="true">True</option>
+                  <option value="false" selected>False</option>
                 </select>
               </div>
             </div>
-
-            <!-- BIRTHDAY -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_birthday">Birthday:</label>
-              <div class="col-sm-10">
-                <input type="date" class="form-control" id="promotion_birthday" placeholder="2020-04-01">
-              </div>
-            </div>
-
 
             <!-- SUBMIT BUTTONS -->
             <div class="form-group">
