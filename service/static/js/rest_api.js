@@ -45,7 +45,7 @@ $(function () {
     }
 
     // ****************************************
-    // Create a Pet
+    // Create a Promotion
     // ****************************************
 
     $("#create-btn").click(function () {
@@ -91,31 +91,37 @@ $(function () {
 
 
     // ****************************************
-    // Update a Pet
+    // Update a Promotion
     // ****************************************
 
     $("#update-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-        let gender = $("#pet_gender").val();
-        let birthday = $("#pet_birthday").val();
+        let promotion_id = $("#promotion_id").val();
+        let name = $("#promotion_name").val();
+        let description = $("#promotion_description").val();
+        let products_type = $("#products_type").val();
+        let promotion_code = $("#promotion_code").val();
+        let require_code = $("#promotion_require_code").val() == "true";
+        let start_date = $("#promotion_start_date").val();
+        let end_date = $("#promotion_end_date").val();
+        let is_active = $("#promotion_is_active").val() == "true";
 
         let data = {
             "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "description": description,
+            "products_type": products_type,
+            "promotion_code": promotion_code,
+            "require_code": require_code,
+            "start_date": start_date,
+            "end_date": end_date,
+            "is_active": is_active
         };
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/pets/${pet_id}`,
+                url: `/promotions/${promotion_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -132,7 +138,7 @@ $(function () {
     });
 
     // ****************************************
-    // Retrieve a Pet
+    // Read a Promotion
     // ****************************************
 
     $("#retrieve-btn").click(function () {
