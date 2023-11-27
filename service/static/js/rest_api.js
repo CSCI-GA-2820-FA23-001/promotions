@@ -162,25 +162,25 @@ $(function () {
     });
 
     // ****************************************
-    // Delete a Pet
+    // Delete a Promotion
     // ****************************************
 
     $("#delete-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
+        let promotion_id = $("#promotion_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/pets/${pet_id}`,
+            url: `/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
         })
 
         ajax.done(function(res){
             clear_form_data()
-            flash_message("Pet has been Deleted!")
+            flash_message("Promotion has been Deleted!")
         });
 
         ajax.fail(function(res){
