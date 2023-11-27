@@ -143,13 +143,13 @@ $(function () {
 
     $("#retrieve-btn").click(function () {
 
-        let pet_id = $("#pet_id").val();
+        let promotion_id = $("#promotion_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/pets/${pet_id}`,
+            url: `/promotions/${promotion_id}`,
             contentType: "application/json",
             data: ''
         })
