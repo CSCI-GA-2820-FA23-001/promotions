@@ -211,11 +211,47 @@ $(function () {
 
     $("#search-btn").click(function () {
 
+        let name = $("#promotion_name").val();
+        let productsType = $("#promotion_products_type").val();
+        let requireCode = $("#promotion_require_code").val();
+        let startDate = $("#promotion_start_date").val();
+        let endDate = $("#promotion_end_date").val();
+
+        let queryString = ""
+
+        function appendQueryParam(key, value) {
+            if (queryString.length > 0) {
+              queryString += '&' + key + '=' + value;
+            } else {
+              queryString += key + '=' + value;
+            }
+          }
+
+          if (name) {
+            appendQueryParam('name', name);
+          }
+          
+          if (productsType) {
+            appendQueryParam('products_type', productsType);
+          }
+          
+          if (requireCode && requireCode.toLowerCase() !== 'all') {
+            appendQueryParam('require_code', requireCode.toLowerCase() === 'true' ? 'true' : 'false');
+          }
+          
+          if (startDate) {
+            appendQueryParam('start_date', startDate);
+          }
+          
+          if (endDate) {
+            appendQueryParam('end_date', endDate);
+          }
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions`,
+            url: `/promotions?${queryString}`,
             contentType: "application/json",
             data: ''
         })
@@ -244,7 +280,7 @@ $(function () {
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
-        
+    
             flash_message("Success");
         });
     
