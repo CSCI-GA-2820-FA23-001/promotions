@@ -9,7 +9,7 @@ $(function () {
         $("#promotion_id").val(res.id);
         $("#promotion_name").val(res.name);
         $("#promotion_description").val(res.description);
-        $("#products_type").val(res.products_type);
+        $("#promotion_products_type").val(res.products_type);
         $("#promotion_code").val(res.promotion_code);
         if (res.require_code == true) {
             $("#promotion_require_code").val("true");
@@ -30,7 +30,7 @@ $(function () {
         $("#promotion_id").val("");
         $("#promotion_name").val("");
         $("#promotion_description").val("");
-        $("#products_type").val("");
+        $("#promotion_products_type").val("");
         $("#promotion_code").val("");
         $("#promotion_require_code").val("");
         $("#promotion_start_date").val("");
@@ -52,7 +52,7 @@ $(function () {
 
         let name = $("#promotion_name").val();
         let description = $("#promotion_description").val();
-        let products_type = $("#products_type").val();
+        let products_type = $("#promotion_products_type").val();
         let promotion_code = $("#promotion_code").val();
         let require_code = $("#promotion_require_code").val() == "true";
         let start_date = $("#promotion_start_date").val();
@@ -99,7 +99,7 @@ $(function () {
         let promotion_id = $("#promotion_id").val();
         let name = $("#promotion_name").val();
         let description = $("#promotion_description").val();
-        let products_type = $("#products_type").val();
+        let products_type = $("#promotion_products_type").val();
         let promotion_code = $("#promotion_code").val();
         let require_code = $("#promotion_require_code").val() == "true";
         let start_date = $("#promotion_start_date").val();

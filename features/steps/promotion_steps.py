@@ -23,16 +23,8 @@ For information on Waiting until elements are present in the HTML see:
     https://selenium-python.readthedocs.io/waits.html
 """
 
-
-import os
 import requests
-import json
-from behave import given, when, then
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from behave import given
 
 # HTTP Return Codes
 HTTP_200_OK = 200
@@ -40,13 +32,19 @@ HTTP_201_CREATED = 201
 HTTP_204_NO_CONTENT = 204
 HTTP_404_NOT_FOUND = 404
 
-# Base URL for the RESTful service
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
-
 
 @given("the following promotions")
 def step_impl(context):
-    context.base_url = BASE_URL
+    """Delete all Promotions and load new ones"""
+
+    # List all of the promotions and delete them one by one
+    rest_endpoint = f"{context.base_url}/promotions"
+    context.resp = requests.get(rest_endpoint)
+    assert context.resp.status_code == HTTP_200_OK
+    for promotion in context.resp.json():
+        context.resp = requests.delete(f"{rest_endpoint}/{promotion['id']}")
+        assert context.resp.status_code == HTTP_204_NO_CONTENT
+
     for row in context.table:
         promotion = {
             "name": row["name"],
@@ -60,19 +58,3 @@ def step_impl(context):
         }
         context.resp = requests.post(context.base_url + "/promotions", json=promotion)
         assert context.resp.status_code == HTTP_201_CREATED
-
-
-@when('I visit the "Home Page"')
-def step_impl(context):
-    context.resp = requests.get(context.base_url)
-    assert context.resp.status_code == HTTP_200_OK
-
-
-@then('I should see "{message}"')
-def step_impl(context, message):
-    assert message in str(context.resp.text)
-
-
-@then('I should not see "{message}"')
-def step_impl(context, message):
-    assert message not in str(context.resp.text)
