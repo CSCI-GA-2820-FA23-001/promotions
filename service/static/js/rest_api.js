@@ -186,6 +186,7 @@ $(function () {
 
         ajax.done(function(res){
             clear_form_data()
+            $("#search-btn").click();
             flash_message("Promotion has been Deleted!")
         });
 
@@ -205,79 +206,52 @@ $(function () {
     });
 
     // ****************************************
-    // Search for a Pet
+    // Search for a Promotion
     // ****************************************
 
     $("#search-btn").click(function () {
-
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-
-        let queryString = ""
-
-        if (name) {
-            queryString += 'name=' + name
-        }
-        if (category) {
-            if (queryString.length > 0) {
-                queryString += '&category=' + category
-            } else {
-                queryString += 'category=' + category
-            }
-        }
-        if (available) {
-            if (queryString.length > 0) {
-                queryString += '&available=' + available
-            } else {
-                queryString += 'available=' + available
-            }
-        }
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/pets?${queryString}`,
+            url: `/promotions`,
             contentType: "application/json",
             data: ''
         })
 
         ajax.done(function(res){
-            //alert(res.toSource())
             $("#search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
-            table += '<thead><tr>'
-            table += '<th class="col-md-2">ID</th>'
-            table += '<th class="col-md-2">Name</th>'
-            table += '<th class="col-md-2">Category</th>'
-            table += '<th class="col-md-2">Available</th>'
-            table += '<th class="col-md-2">Gender</th>'
-            table += '<th class="col-md-2">Birthday</th>'
-            table += '</tr></thead><tbody>'
-            let firstPet = "";
+            table += '<thead><tr>';
+            table += '<th>ID</th>';
+            table += '<th>Name</th>';
+            table += '<th>Description</th>';
+            table += '<th>Products Type</th>';
+            table += '<th>Promotion Code</th>';
+            table += '<th>Require Code</th>';
+            table += '<th>Start Date</th>';
+            table += '<th>End Date</th>';
+            table += '<th>Is Active</th>';
+            table += '</tr></thead><tbody>';
+            let firstPromotion = "";
             for(let i = 0; i < res.length; i++) {
-                let pet = res[i];
-                table +=  `<tr id="row_${i}"><td>${pet.id}</td><td>${pet.name}</td><td>${pet.category}</td><td>${pet.available}</td><td>${pet.gender}</td><td>${pet.birthday}</td></tr>`;
+                let promotion = res[i];
+                table +=  `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.description}</td><td>${promotion.products_type}</td><td>${promotion.promotion_code}</td><td>${promotion.require_code ? 'Yes' : 'No'}</td><td>${promotion.start_date}</td><td>${promotion.end_date}</td><td>${promotion.is_active ? 'Yes' : 'No'}</td></tr>`;
                 if (i == 0) {
-                    firstPet = pet;
+                    firstPromotion = promotion;
                 }
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
-
-            // copy the first result to the form
-            if (firstPet != "") {
-                update_form_data(firstPet)
-            }
-
-            flash_message("Success")
+        
+            flash_message("Success");
         });
-
+    
         ajax.fail(function(res){
-            flash_message(res.responseJSON.message)
+            flash_message(res.responseJSON.message);
         });
-
+    
     });
 
 })
