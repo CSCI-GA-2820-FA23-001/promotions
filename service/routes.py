@@ -8,8 +8,6 @@ from flask_restx import Resource, fields, reqparse
 from service.common import status  # HTTP Status Codes
 from service.models import Promotion
 
-from datetime import datetime
-
 # Import Flask application
 from . import app, api
 
