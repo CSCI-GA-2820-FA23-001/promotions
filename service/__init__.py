@@ -6,6 +6,8 @@ and SQL database
 """
 import sys
 from flask import Flask
+from flask_restx import Api
+
 from service import config
 from service.common import log_handlers
 
@@ -13,9 +15,24 @@ from service.common import log_handlers
 app = Flask(__name__)
 app.config.from_object(config)
 
+######################################################################
+# Configure Swagger before initializing it
+######################################################################
+api = Api(
+    app,
+    version="1.0.0",
+    title="Promotion REST API Service",
+    description="This is a Promotion server.",
+    default="promotions",
+    default_label="Promotion operations",
+    doc="/apidocs",
+    prefix="/api",
+)
+
 # Dependencies require we import the routes AFTER the Flask app is created
 # pylint: disable=wrong-import-position, wrong-import-order, cyclic-import
 from service import routes, models  # noqa: E402, E261
+
 # pylint: disable=wrong-import-position
 from service.common import error_handlers, cli_commands  # noqa: F401, E402
 
