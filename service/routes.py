@@ -68,8 +68,7 @@ promotion_model = api.inherit(
     "PromotionModel",
     create_model,
     {
-        "_id": fields.Integer(
-            required=True,
+        "_id": fields.String(
             readOnly=True,
             description="The unique id assigned internally by service",
         ),
@@ -275,58 +274,64 @@ class PromotionCollection(Resource):
         )
 
 
-# ######################################################################
-# #  PATH: /promotions/{id}/activate
-# ######################################################################
-# @api.route("/promotions/<promotion_id>/activate")
-# @api.param("promotion_id", "The promotion identifier")
-# class ActivateResource(Resource):
-#     """Activate actions on a Promotion"""
+######################################################################
+#  PATH: /promotions/{id}/activate
+######################################################################
+@api.route("/promotions/<promotion_id>/activate")
+@api.param("promotion_id", "The promotion identifier")
+class ActivateResource(Resource):
+    """Activate actions on a Promotion"""
 
-#     @api.doc("activate_promotions")
-#     @api.response(404, "Promotion not found")
-#     @api.response(409, "The promotion is not available for activate")
-#     def put(self, promotion_id):
-#         """
-#         Activate a Promotion
+    @api.doc("activate_promotions")
+    @api.response(404, "Promotion not found")
+    @api.response(409, "The promotion is not available for activate")
+    def put(self, promotion_id):
+        """
+        Activate a Promotion
 
-#         This endpoint will activate a promotion
-#         """
-#         app.logger.info("Request to activate a promotion")
-#         promotion = Promotion.find(promotion_id)
-#         if not promotion:
-#             abort(status.HTTP_404_NOT_FOUND, f"Promotion with id [{promotion_id}] was not found.")
+        This endpoint will activate a promotion
+        """
+        app.logger.info("Request to activate a promotion")
+        promotion = Promotion.find(promotion_id)
+        if not promotion:
+            abort(
+                status.HTTP_404_NOT_FOUND,
+                f"Promotion with id [{promotion_id}] was not found.",
+            )
 
-#         promotion.activate()
-#         app.logger.info("Promotion with id [%s] activated.", promotion.id)
-#         return promotion.serialize(), status.HTTP_200_OK
+        promotion.activate()
+        app.logger.info("Promotion with id [%s] activated.", promotion.id)
+        return promotion.serialize(), status.HTTP_200_OK
 
 
-# ######################################################################
-# #  PATH: /promotions/{id}/deactivate
-# ######################################################################
-# @api.route("/promotions/<promotion_id>/deactivate")
-# @api.param("promotion_id", "The promotion identifier")
-# class DeactivateResource(Resource):
-#     """Deactivate actions on a Promotion"""
+######################################################################
+#  PATH: /promotions/{id}/deactivate
+######################################################################
+@api.route("/promotions/<promotion_id>/deactivate")
+@api.param("promotion_id", "The promotion identifier")
+class DeactivateResource(Resource):
+    """Deactivate actions on a Promotion"""
 
-#     @api.doc("deactivate_promotions")
-#     @api.response(404, "Promotion not found")
-#     @api.response(409, "The promotion is not available for deactivate")
-#     def put(self, promotion_id):
-#         """
-#         Deactivate a Promotion
+    @api.doc("deactivate_promotions")
+    @api.response(404, "Promotion not found")
+    @api.response(409, "The promotion is not available for deactivate")
+    def put(self, promotion_id):
+        """
+        Deactivate a Promotion
 
-#         This endpoint will deactivate a promotion
-#         """
-#         app.logger.info("Request to deactivate a promotion")
-#         promotion = Promotion.find(promotion_id)
-#         if not promotion:
-#             abort(status.HTTP_404_NOT_FOUND, f"Promotion with id [{promotion_id}] was not found.")
+        This endpoint will deactivate a promotion
+        """
+        app.logger.info("Request to deactivate a promotion")
+        promotion = Promotion.find(promotion_id)
+        if not promotion:
+            abort(
+                status.HTTP_404_NOT_FOUND,
+                f"Promotion with id [{promotion_id}] was not found.",
+            )
 
-#         promotion.deactivate()
-#         app.logger.info("Promotion with id [%s] deactivated.", promotion.id)
-#         return promotion.serialize(), status.HTTP_200_OK
+        promotion.deactivate()
+        app.logger.info("Promotion with id [%s] deactivated.", promotion.id)
+        return promotion.serialize(), status.HTTP_200_OK
 
 
 # ######################################################################
