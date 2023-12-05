@@ -38,11 +38,11 @@ def step_impl(context):
     """Delete all Promotions and load new ones"""
 
     # List all of the promotions and delete them one by one
-    rest_endpoint = f"{context.base_url}/promotions"
+    rest_endpoint = f"{context.base_url}/api/promotions"
     context.resp = requests.get(rest_endpoint)
     assert context.resp.status_code == HTTP_200_OK
     for promotion in context.resp.json():
-        context.resp = requests.delete(f"{rest_endpoint}/{promotion['id']}")
+        context.resp = requests.delete(f"{rest_endpoint}/{promotion['_id']}")
         assert context.resp.status_code == HTTP_204_NO_CONTENT
 
     for row in context.table:
@@ -56,5 +56,5 @@ def step_impl(context):
             "end_date": row["end_date"],
             "is_active": row["is_active"] == "true",
         }
-        context.resp = requests.post(context.base_url + "/promotions", json=promotion)
+        context.resp = requests.post(rest_endpoint, json=promotion)
         assert context.resp.status_code == HTTP_201_CREATED

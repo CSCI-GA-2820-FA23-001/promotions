@@ -6,7 +6,7 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#promotion_id").val(res.id);
+        $("#promotion_id").val(res._id);
         $("#promotion_name").val(res.name);
         $("#promotion_description").val(res.description);
         $("#promotion_products_type").val(res.products_type);
@@ -74,7 +74,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/promotions",
+            url: "/api/promotions",
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -121,7 +121,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/promotions/${promotion_id}`,
+                url: `/api/promotions/${promotion_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -149,7 +149,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -179,7 +179,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/promotions/${promotion_id}`,
+            url: `/api/promotions/${promotion_id}`,
             contentType: "application/json",
             data: '',
         })
@@ -207,7 +207,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${promotion_id}/activate`,
+            url: `/api/promotions/${promotion_id}/activate`,
             contentType: "application/json",
             data: '',
         })
@@ -235,7 +235,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${promotion_id}/deactivate`,
+            url: `/api/promotions/${promotion_id}/deactivate`,
             contentType: "application/json",
             data: '',
         })
@@ -307,7 +307,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions?${queryString}`,
+            url: `/api/promotions?${queryString}`,
             contentType: "application/json",
             data: ''
         })
@@ -329,7 +329,7 @@ $(function () {
             let firstPromotion = "";
             for(let i = 0; i < res.length; i++) {
                 let promotion = res[i];
-                table +=  `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.description}</td><td>${promotion.products_type}</td><td>${promotion.promotion_code}</td><td>${promotion.require_code ? 'Yes' : 'No'}</td><td>${promotion.start_date}</td><td>${promotion.end_date}</td><td>${promotion.is_active ? 'Yes' : 'No'}</td></tr>`;
+                table +=  `<tr id="row_${i}"><td>${promotion._id}</td><td>${promotion.name}</td><td>${promotion.description}</td><td>${promotion.products_type}</td><td>${promotion.promotion_code}</td><td>${promotion.require_code ? 'Yes' : 'No'}</td><td>${promotion.start_date}</td><td>${promotion.end_date}</td><td>${promotion.is_active ? 'Yes' : 'No'}</td></tr>`;
                 if (i == 0) {
                     firstPromotion = promotion;
                 }
