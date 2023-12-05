@@ -3,9 +3,8 @@ My Service
 
 Describe what your service does here
 """
-from datetime import datetime
-from flask import jsonify, request, abort
-from flask_restx import Resource, fields, reqparse, inputs
+from flask import jsonify, abort
+from flask_restx import Resource, fields, reqparse
 from service.common import status  # HTTP Status Codes
 from service.models import Promotion
 
@@ -17,9 +16,9 @@ from . import app, api
 # GET HEALTH CHECK
 ######################################################################
 @app.route("/health")
-def healthcheck():
+def health():
     """Let them know our heart is still beating"""
-    return jsonify(status=200, message="OK"), status.HTTP_200_OK
+    return jsonify({"status": "OK"}), status.HTTP_200_OK
 
 
 ######################################################################

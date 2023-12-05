@@ -9,7 +9,6 @@ import os
 import logging
 from unittest import TestCase
 from urllib.parse import quote_plus
-from datetime import datetime
 from datetime import date
 from service import app
 from service.models import db, Promotion, init_db
@@ -91,7 +90,7 @@ class TestPromotionServer(TestCase):
         response = self.app.get("/health")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(data["message"], "OK")
+        self.assertEqual(data["status"], "OK")
 
     ######################################################################
     # CREATE A NEW PROMOTION
