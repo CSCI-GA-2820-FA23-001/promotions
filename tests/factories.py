@@ -30,7 +30,7 @@ class PromotionFactory(factory.Factory):
 
         model = Promotion
 
-    id = factory.Sequence(lambda n: n)
+    # id = factory.Sequence(lambda n: n)
     name = FuzzyChoice(
         choices=[
             "First time Shopper Discount",

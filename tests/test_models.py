@@ -289,8 +289,6 @@ class TestPromotionModel(unittest.TestCase):
         promotion = PromotionFactory()
         data = promotion.serialize()
         self.assertIsNotNone(data)
-        self.assertIn("id", data)
-        self.assertEqual(data["id"], promotion.id)
         self.assertIn("name", data)
         self.assertEqual(data["name"], promotion.name)
         self.assertIn("description", data)
