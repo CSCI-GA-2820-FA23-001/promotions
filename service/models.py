@@ -89,19 +89,6 @@ class Promotion(db.Model):
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""
-
-        # return {
-        #     "id": self.id,
-        #     "name": self.name,
-        #     "description": self.description,
-        #     "products_type": self.products_type,
-        #     "promotion_code": self.promotion_code,
-        #     "require_code": self.require_code,
-        #     "start_date": self.start_date.isoformat(),
-        #     "end_date": self.end_date.isoformat(),
-        #     "is_active": self.is_active,
-        # }
-
         promotion = {
             "name": self.name,
             "description": self.description,
