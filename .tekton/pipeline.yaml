@@ -73,7 +73,7 @@ spec:
     - name: lint
       params:
         - name: image
-          value: 'docker.io/python:3.11-slim'
+          value: 'docker.io/rofrano/nyu-devops-base:fa23'
         - name: path
           value: service
         - name: requirements_file
