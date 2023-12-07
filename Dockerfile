@@ -17,7 +17,7 @@ RUN python -m venv venv && \
 ##################################################
 # Create production image from builder image
 ##################################################
-FROM python:3.11-slim
+FROM rofrano/nyu-devops-base:fa23
 
 # Install Postgres libraries
 RUN apt-get update && apt-get install -y postgresql-client
