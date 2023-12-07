@@ -1,7 +1,7 @@
 ##################################################
 # Create a builder image to compile in
 ##################################################
-FROM python:3.11-slim as builder
+FROM rofrano/nyu-devops-base:fa23 as builder
 
 # Added libraries for PostgreSQL before pip install
 RUN apt-get update && apt-get install -y gcc libpq-dev
