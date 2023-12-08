@@ -48,7 +48,7 @@ spec:
 
         echo "***** Installing dependencies *****"
         python -m pip install --upgrade pip wheel
-        pip install -qr requirements.txt
+        sudo pip install -qr requirements.txt
 
         echo "***** Running Tests *****"
         green $(params.ARGS)
