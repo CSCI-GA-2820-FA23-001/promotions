@@ -99,11 +99,12 @@ data:
 #     --from-literal=password=$POSTGRES_PASSWORD
 #     --from-literal=database_uri=$DATABASE_URI
 #
-apiVersion: v1
 kind: Secret
+apiVersion: v1
 metadata:
   name: postgres-creds
 data:
+  database_uri: >-
+    cG9zdGdyZXNxbCtwc3ljb3BnOi8vcG9zdGdyZXM6cGdzM2NyM3RAcG9zdGdyZXNxbDo1NDMyL3Byb21vdGlvbg==
   password: cGdzM2NyM3Q=
-  database_uri: |
-      cG9zdGdyZXNxbCtwc3ljb3BnOi8vcG9zdGdyZXM6cGdzM2NyM3RAcG9zdGdyZXNxbDo1NDMyL3Byb21vdGlvbg==
+type: Opaque

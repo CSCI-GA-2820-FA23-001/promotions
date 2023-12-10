@@ -11,7 +11,7 @@ spec:
       description: The reference (branch or ref)
       name: GIT_REF
       type: string
-    - default: vvv --processes=1 --run-coverage --minimum-coverage=95
+    - default: '-vvv --processes=1 --run-coverage --termcolor --minimum-coverage=95'
       description: Arguments for green testing
       name: GREEN_ARGS
       type: string
@@ -90,22 +90,6 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
-    - name: testing
-      params:
-        - name: ARGS
-          value: $(params.GREEN_ARGS)
-        - name: SECRET_NAME
-          value: postgres-creds
-        - name: SECRET_KEY
-          value: database_uri
-      runAfter:
-        - git-clone
-      taskRef:
-        kind: Task
-        name: green
-      workspaces:
-        - name: source
-          workspace: pipeline-workspace
     - name: buildah
       params:
         - name: IMAGE
@@ -131,7 +115,8 @@ spec:
           value: 'false'
       runAfter:
         - lint
-        - testing
+        - git-clone
+        - green
       taskRef:
         kind: ClusterTask
         name: buildah
@@ -151,6 +136,22 @@ spec:
       taskRef:
         kind: Task
         name: deploy-image
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
+    - name: green
+      params:
+        - name: ARGS
+          value: $(params.GREEN_ARGS)
+        - name: SECRET_NAME
+          value: postgres-creds
+        - name: SECRET_KEY
+          value: database_uri
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: green
       workspaces:
         - name: source
           workspace: pipeline-workspace
