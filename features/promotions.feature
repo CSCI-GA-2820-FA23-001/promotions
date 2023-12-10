@@ -54,3 +54,19 @@ Scenario: Activate a promotion
     And I press the "Activate" button
     Then I should see the message "Success"    
     And I should see "True" in the "Is Active" dropdown
+
+Scenario: Deactivate a promotion
+    When I visit the "Home Page"
+    And I set the "id" to "7"
+    And I set the "name" to "NY Sale"
+    And I set the "description" to "promotion for NY 2024"
+    And I set the "products_type" to "all_types"
+    And I set the "code" to "NY24"
+    And I set the Start Date to "2023-12-15"
+    And I set the End Date to "2024-01-15"
+    And I press the "Create" button
+    Then I should see the message "Success"    
+    When I copy the "id" field
+    And I press the "Deactivate" button
+    Then I should see the message "Success"    
+    And I should see "False" in the "Is Active" dropdown
