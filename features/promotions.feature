@@ -38,3 +38,19 @@ Scenario: Create a promotion
     And I set the End Date to "2023-11-30"
     And I press the "Create" button
     Then I should see the message "Success"    
+
+Scenario: Activate a promotion
+    When I visit the "Home Page"
+    And I set the "id" to "6"
+    And I set the "name" to "Christmas Sale"
+    And I set the "description" to "promotion for Christmas"
+    And I set the "products_type" to "all_types"
+    And I set the "code" to "XMAS"
+    And I set the Start Date to "2023-12-15"
+    And I set the End Date to "2023-12-30"
+    And I press the "Create" button
+    Then I should see the message "Success"    
+    When I copy the "id" field
+    And I press the "Activate" button
+    Then I should see the message "Success"    
+    And I should see "True" in the "Is Active" dropdown
