@@ -199,7 +199,7 @@ $(function () {
     // Activate a Promotion
     // ****************************************
 
-    $("#actiavte-btn").click(function () {
+    $("#activate-btn").click(function () {
 
         let promotion_id = $("#promotion_id").val();
 
@@ -227,7 +227,7 @@ $(function () {
     // Deactivate a Promotion
     // ****************************************
 
-    $("#deactiavte-btn").click(function () {
+    $("#deactivate-btn").click(function () {
 
         let promotion_id = $("#promotion_id").val();
 
