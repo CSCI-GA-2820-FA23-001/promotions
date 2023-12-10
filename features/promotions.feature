@@ -26,3 +26,15 @@ Scenario: List all promotions
     And I should see "Clearance Special" in the results
     And I should see "Cyber Monday Sale" in the results
     And I should not see "Flash Sale" in the results
+
+Scenario: Create a promotion
+    When I visit the "Home Page"
+    And I set the "id" to "5"
+    And I set the "name" to "Black Friday Sale"
+    And I set the "description" to "promotion for Black Friday"
+    And I set the "products_type" to "all_types"
+    And I set the "code" to "BLCKFRI"
+    And I set the Start Date to "2023-11-15"
+    And I set the End Date to "2023-11-30"
+    And I press the "Create" button
+    Then I should see the message "Success"    
