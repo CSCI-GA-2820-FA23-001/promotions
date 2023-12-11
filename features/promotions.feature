@@ -105,3 +105,13 @@ Scenario: Update a Promotion
     And I press the "Update" button
     Then I should see the message "Success"    
     And I should see "NY24_3" in the "code" field
+
+Scenario: List specific criteria promotions
+    When I visit the "Home Page"
+    And I set the "products_type" to "all_types"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "First Time Shopper Discount" in the results
+    And I should see "Holiday Sale" in the results
+    And I should not see "Cyber Monday Sale" in the results
+    And I should not see "Clearance Special" in the results
