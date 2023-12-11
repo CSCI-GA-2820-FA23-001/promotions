@@ -31,7 +31,7 @@ spec:
           protocol: TCP
         env:
           - name: RETRY_COUNT
-            value: "9"
+            value: "10"
           - name: DATABASE_URI
             valueFrom:
               secretKeyRef:
