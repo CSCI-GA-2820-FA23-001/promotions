@@ -48,6 +48,7 @@ Scenario: Activate a promotion
     And I set the "code" to "XMAS"
     And I set the Start Date to "2023-12-15"
     And I set the End Date to "2023-12-30"
+    And I select "False" in the "Is Active" dropdown
     And I press the "Create" button
     Then I should see the message "Success"    
     When I copy the "id" field
@@ -64,6 +65,7 @@ Scenario: Deactivate a promotion
     And I set the "code" to "NY24"
     And I set the Start Date to "2023-12-15"
     And I set the End Date to "2024-01-15"
+    And I select "True" in the "Is Active" dropdown
     And I press the "Create" button
     Then I should see the message "Success"    
     When I copy the "id" field
@@ -103,5 +105,9 @@ Scenario: Update a Promotion
     When I copy the "id" field
     And I set the "code" to "NY24_3"
     And I press the "Update" button
+    When I copy the "id" field
+    And I press the "Clear" button
+    And I paste the "id" field
+    When I press the "Search" button
     Then I should see the message "Success"    
-    And I should see "NY24_3" in the "code" field
+    And I should see "NY24_3" in the results
