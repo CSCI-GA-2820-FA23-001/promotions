@@ -88,7 +88,7 @@ metadata:
   name: postgres-config
 data:
   postgres_user: postgres
-  postgres_db: promotion 
+  postgres_db: promotion
 ---
 # This secret can also be created from the command line using environment variables
 #
@@ -105,6 +105,6 @@ metadata:
   name: postgres-creds
 data:
   database_uri: >-
-    cG9zdGdyZXNxbCtwc3ljb3BnOi8vcG9zdGdyZXM6cGdzM2NyM3RAcG9zdGdyZXNxbDo1NDMyL3Byb21vdGlvbg==
+    cG9zdGdyZXNxbCtwc3ljb3BnOi8vcG9zdGdyZXM6cGdzM2NyM3RAcG9zdGdyZXM6NTQzMi9wcm9tb3Rpb24=
   password: cGdzM2NyM3Q=
 type: Opaque
