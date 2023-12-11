@@ -42,7 +42,7 @@ spec:
            secretKeyRef:
              name: $(params.SECRET_NAME)
              key: $(params.SECRET_KEY)
-      script: | 
+      script: |
         #!/bin/bash
         set -e
 
