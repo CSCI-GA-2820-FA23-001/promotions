@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/CSCI-GA-2820-FA23-001/promotions/actions/workflows/ci.yml/badge.svg)](https://github.com/CSCI-GA-2820-FA23-001/promotions/actions)
 [![Build Status](https://github.com/CSCI-GA-2820-FA23-001/promotions/actions/workflows/bdd.yml/badge.svg)](https://github.com/CSCI-GA-2820-FA23-001/promotions/actions)
 
-This repository contains code for Customer promotions for an e-commerce web site.
+This repository contains code for Customer promotions for an e-commerce web site. 
 
 ## Overview
 
