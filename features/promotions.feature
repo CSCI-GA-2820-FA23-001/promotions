@@ -140,3 +140,14 @@ Scenario: Read a Promotion
     Then I should see the message "Success"    
     When I copy the "id" field
     And I press the "Retrieve" button
+
+Scenario: Query a promotion using required code
+   When I visit the "Home Page" 
+   And I set the "id" to "12" 
+   And I set the "code" to "all"
+   And I press the "Search" button 
+   Then I should see the message "Success" 
+   And I should see "First Time Shopper Discount" in the results
+   And I should see "Holiday Sale" in the results
+   And I should see "Clearance Special" in the results
+   And I should see "Cyber Monday Sale" in the results
