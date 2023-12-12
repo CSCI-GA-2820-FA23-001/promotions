@@ -63,6 +63,23 @@ tests/              - test cases package
 ├── __init__.py     - package initializer
 ├── test_models.py  - test suite for business models
 └── test_routes.py  - test suite for service routes
+
+k8s/                - Kubernetes yaml
+├── deployment.yaml 
+├── ingress.yaml
+├── postgres.yaml
+├── pv.yaml
+└── serice.yaml
+
+.tekton/            - tekton yaml
+├── pipeline.yaml   - CI/CD pipelines
+├── tasks.yaml      - tasks in pipelines
+└── workspace.yaml  - PVC for pipelines
+└── events          - event listener and trigger
+    ├── event_listener.yaml 
+    ├── route.yaml          
+    └── trigger_binding.yaml
+    └── trigger_template.yaml
 ```
 
 ## Database model:
