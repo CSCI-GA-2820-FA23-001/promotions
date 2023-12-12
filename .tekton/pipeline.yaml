@@ -155,5 +155,18 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
+    - name: run-behave
+      params:
+        - name: BASE_URL
+          value: >-
+            https://promotion-yc6380-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com/
+      runAfter:
+        - deploy-image
+      taskRef:
+        kind: Task
+        name: run-behave
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
   workspaces:
     - name: pipeline-workspace
