@@ -80,6 +80,13 @@ k8s/                - Kubernetes yaml
     ├── route.yaml          
     └── trigger_binding.yaml
     └── trigger_template.yaml
+
+features/           
+├── environment.py          - Behave testing environment
+├── promotions.features     - Promotion service back-end
+└── steps              
+    ├── promotion_steps.py  - Steps file for promotions.feature
+    └── web_step.py         - Steps file for web interactions with Selenium
 ```
 
 ## Database model:
